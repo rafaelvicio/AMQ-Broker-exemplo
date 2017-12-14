@@ -1,5 +1,7 @@
 package amq;
 
+import java.util.Random;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.MessageProducer;
@@ -8,7 +10,7 @@ import javax.jms.Session;
 
 import org.apache.qpid.jms.JmsConnectionFactory;
 
-public class JmsBroker {
+public class Producer {
 	
 	public static void main(String[] args) throws Exception {
         Connection connection = null;
@@ -25,9 +27,15 @@ public class JmsBroker {
             // Step 3. Create a sender
             Queue queue = session.createQueue("exampleQueue");
             MessageProducer sender = session.createProducer(queue);
+            
+            Random gerador = new Random();
+            Integer cordenadaX = gerador.nextInt();
+            Integer cordenadaY = gerador.nextInt();
+            
 
             // Step 4. send a few simple message
-            sender.send(session.createTextMessage("Hello world 3"));
+            sender.send(session.createTextMessage("X: " + cordenadaX  + " Y: " + cordenadaY));
+            
 
         } finally {
             if (connection != null) {

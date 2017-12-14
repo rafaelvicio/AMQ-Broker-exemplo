@@ -2,7 +2,10 @@ package amq;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
@@ -32,9 +35,18 @@ public class Consumer {
             // Step 5. create a moving receiver, connectionthis means the message will be removed from the queue
             MessageConsumer consumer = session.createConsumer(queue);
 
-            // Step 7. receive the simple message
-            TextMessage m = (TextMessage) consumer.receive(5000);
-            System.out.println("message = " + m.getText());
+            consumer.setMessageListener(new MessageListener() {
+				
+				public void onMessage(Message m) {
+					try {
+						System.out.println("on message = " + ((TextMessage)m).getText());
+					} catch (JMSException e) {
+						e.printStackTrace();
+					}
+					
+				}
+			});
+            while(true);
 
         } finally {
             if (connection != null) {
